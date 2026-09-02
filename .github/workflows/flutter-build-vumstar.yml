@@ -1382,6 +1382,17 @@ jobs:
           vcpkgGitCommitId: ${{ env.VCPKG_COMMIT_ID }}
           doNotCache: false
 
+      - name: Install CMake >= 4.3 for vcpkg (aarch64)
+        if: matrix.job.arch == 'aarch64' && env.UPLOAD_ARTIFACT == 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/cmake-4.3.0"
+          curl -sL -o cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v4.3.0/cmake-4.3.0-linux-aarch64.tar.gz
+          tar xzf cmake.tar.gz -C "$HOME/cmake-4.3.0" --strip-components=1
+          rm cmake.tar.gz
+          echo "$HOME/cmake-4.3.0/bin" >> "$GITHUB_PATH"
+          cmake --version
+
       - name: Install vcpkg dependencies
         if: matrix.job.arch == 'x86_64' || env.UPLOAD_ARTIFACT == 'true'
         run: |
